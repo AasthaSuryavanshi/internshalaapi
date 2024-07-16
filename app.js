@@ -20,6 +20,18 @@ app.use(express.json());
 app.use(express.urlencoded({ extended:false}));
 
 
+//express session and cookies 0
+const session = require('express-session');
+const cookieParser = require('cookie-parser');
+app.use(session({
+    resave:true,
+    saveUninitialized:true,
+    secret: process.env.Session_secret
+}));
+
+app.use(cookieParser());
+
+
 //routes
 app.use('/', require('./routers/indexRouter'))
 

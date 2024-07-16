@@ -1,9 +1,16 @@
 const { CatchErrorHandling } = require("../Middlewares/CatchErrorHandling");
 const studentModel = require('../Models/studentModel');
 const ErrorHandler = require("../utils/ErrorHandler");
+const { getToken } = require("../utils/getTokens");
 
 exports.homePage = CatchErrorHandling (async(req, res, next) => {
     res.json({message:"heeloo from get router"});
+    
+})
+
+exports.currentUser = CatchErrorHandling (async(req, res, next) => {
+    const student = await studentModel.findById(req.id)
+    res.json(student);
     
 })
 
@@ -17,7 +24,7 @@ exports.homePage = CatchErrorHandling (async(req, res, next) => {
 
 exports.studentSignup = CatchErrorHandling(async(req, res, next) => {
     const Student = await new studentModel(req.body).save();
-    res.status(201).json(Student);
+    getToken(Student,201,res);
 })
 
 exports.studentSignin = CatchErrorHandling(async(req, res, next) => {
@@ -34,8 +41,11 @@ exports.studentSignin = CatchErrorHandling(async(req, res, next) => {
         return next(new ErrorHandler("Invalid password", 401));
     }
 
-    res.status(201).json(Student);
+    getToken(Student,200,res);
 
 })
 
-exports.studentSignout = CatchErrorHandling(async(req, res, next) => {})
+exports.studentSignout = CatchErrorHandling(async(req, res, next) => {
+    res.clearCookie("token");
+    res.json({message: "signout successfully!"})
+})

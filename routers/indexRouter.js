@@ -1,12 +1,16 @@
 const express = require('express');
-const { homePage,studentSignup,studentSignin, studentSignout } = require('../controllers/indexController');
+const { homePage,studentSignup,studentSignin, studentSignout, currentUser } = require('../controllers/indexController');
+const { isAuthenticated } = require('../Middlewares/auth');
 const router = express.Router();
 
 
 
 
 // GET /
-router.get('/', homePage)
+router.get('/', isAuthenticated ,homePage)
+
+// POST /
+router.post('/student', isAuthenticated ,currentUser)
 
 // POST /student/signup
 router.post('/student/signup', studentSignup)
@@ -15,7 +19,7 @@ router.post('/student/signup', studentSignup)
 router.post('/student/signin', studentSignin)
 
 // GET /student/signout
-router.get('/student/signout', studentSignout)
+router.get('/student/signout', isAuthenticated ,studentSignout)
 
 
 

@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 const studentModel = new mongoose.Schema({
 
@@ -44,7 +45,7 @@ const studentModel = new mongoose.Schema({
 // pre will run before the action of (save here) 
 studentModel.pre("save", function(){
 
-    if(!this.isModified) return;     //save tho kai bar hoga pr is password not changed then return
+    if(!this.isModified("password")) return;     //save tho kai bar hoga pr is password not changed then return
 
     
     let salt = bcrypt.genSaltSync(10);
@@ -54,6 +55,14 @@ studentModel.pre("save", function(){
 studentModel.methods.comparePassword = function(password){       //comparing the passwords of user
     return bcrypt.compareSync(password, this.password)
 }
+
+
+
+// jwt tokens
+studentModel.methods.getjwttoken = function(){
+    return jwt.sign({id:this._id}, process.env.JWT_SCERET,{expiresIn:process.env.JWT_EXPIRETIME})
+}
+
 
 
 module.exports = mongoose.model('Student', studentModel);
