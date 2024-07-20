@@ -1,5 +1,7 @@
 require ("dotenv").config({path:'./.env'})
 require("./routers/indexRouter");
+require("./routers/resumeRouter");
+
 const { config } = require('dotenv');
 const express = require('express');
 const app = express();
@@ -37,7 +39,11 @@ app.use(fileupload());
 
 
 //routes
-app.use('/', require('./routers/indexRouter'))
+app.use('/user', require('./routers/indexRouter'))
+app.use('/resume', require('./routers/resumeRouter'))
+app.use('/employe', require('./routers/employeRouter'))
+
+
 
 
 
