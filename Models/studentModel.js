@@ -105,14 +105,15 @@ const studentModel = new mongoose.Schema({
         certificate:[],
         accomplishment:[],
 
-    }
-
-
-
-
-
-
-
+    },
+    internships:[{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "internship"
+    }],
+    jobs:[{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "job"
+    }]
 
 }, { timestamps: true } );
 

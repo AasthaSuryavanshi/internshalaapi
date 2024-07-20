@@ -1,5 +1,8 @@
 const { CatchErrorHandling } = require("../Middlewares/CatchErrorHandling");
 const studentModel = require('../Models/studentModel');
+const internshipModel = require('../Models/internshipModel');
+const jobModel = require('../Models/jobModel');
+
 const ErrorHandler = require("../utils/ErrorHandler");
 const { getToken } = require("../utils/getTokens");
 const { sendmail } = require("../utils/nodemailer");
@@ -128,4 +131,26 @@ exports.studentavatar = CatchErrorHandling(async(req, res, next) => {
         success: true,
         message: "avatar updated successfully!",
     })
+})
+
+
+exports.applyinternship = CatchErrorHandling (async(req, res, next) => {
+    const student = await studentModel.findById(req.id)
+    const internship = await internshipModel.findById(req.params.internshipId)
+    student.internships.push(internship._id);
+    internship.student.push(student._id);
+    await student.save();
+    await internship.save();
+    res.status(200).json({message: "internship applied successfully"})
+    
+})
+
+exports.applyjob = CatchErrorHandling (async(req, res, next) => {
+    const student = await studentModel.findById(req.id)
+    const job = await jobModel.findById(req.params.jobId)
+    student.jobs.push(job._id);
+    job.student.push(student._id);
+    await student.save();
+    await job.save();
+    res.status(200).json({message: "job applied successfully"})
 })

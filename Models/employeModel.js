@@ -99,14 +99,15 @@ const employeModel = new mongoose.Schema({
         default:"0"
     },
 
-    internships:{
+    internships:[{
         type: mongoose.Schema.Types.ObjectId,
         ref: "internship"
-    },
-    jobs:{
+    }],
+    jobs:[{
         type: mongoose.Schema.Types.ObjectId,
         ref: "job"
-    }
+    }]
+    
 }, { timestamps: true } );
 
 

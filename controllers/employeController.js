@@ -1,5 +1,8 @@
 const { CatchErrorHandling } = require("../Middlewares/CatchErrorHandling");
 const employeModel = require('../Models/employeModel');
+const internshipModel = require('../Models/internshipModel');
+const jobModel = require('../Models/jobModel');
+
 const ErrorHandler = require("../utils/ErrorHandler");
 const { getToken } = require("../utils/getTokens");
 const { sendmail } = require("../utils/nodemailer");
@@ -128,4 +131,52 @@ exports.employeavatar = CatchErrorHandling(async(req, res, next) => {
         success: true,
         message: "Organization_logo updated successfully!",
     })
+})
+
+
+// --------------------------------INTERNSHIP--------------------------
+
+exports.createinternship = CatchErrorHandling(async(req, res, next) => {
+    const employe = await employeModel.findById(req.id);
+    const internship = await new internshipModel(req.body);
+    internship.employe = employe._id,
+    employe.internships.push(internship._id);
+    await internship.save();
+    await employe.save();
+    
+    res.status(201).json({success: true , internship});
+})
+
+exports.readinternship = CatchErrorHandling(async(req, res, next) => {
+    const {internships} = await employeModel.findById(req.id).populate('internships').exec();
+    res.status(200).json({success: true , internships});
+})
+
+exports.readsingleinternship = CatchErrorHandling(async(req, res, next) => {
+    const internship = await internshipModel(req.body);
+    res.status(200).json({success: true , internship});
+})
+
+
+// --------------------------------JOB--------------------------
+
+exports.createjob = CatchErrorHandling(async(req, res, next) => {
+    const employe = await employeModel.findById(req.id);
+    const job = await new jobModel(req.body);
+    job.employe = employe._id,
+    employe.jobs.push(job._id);
+    await job.save();
+    await employe.save();
+    
+    res.status(201).json({success: true , job});
+})
+
+exports.readjob = CatchErrorHandling(async(req, res, next) => {
+    const {jobs} = await employeModel.findById(req.id).populate('jobs').exec();
+    res.status(200).json({success: true , jobs});
+})
+
+exports.readsinglejob = CatchErrorHandling(async(req, res, next) => {
+    const job = await jobModel(req.body);
+    res.status(200).json({success: true , job});
 })
