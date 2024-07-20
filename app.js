@@ -28,8 +28,12 @@ app.use(session({
     saveUninitialized:true,
     secret: process.env.Session_secret
 }));
-
 app.use(cookieParser());
+
+// file upload
+const fileupload = require('express-fileupload');
+app.use(fileupload());
+
 
 
 //routes

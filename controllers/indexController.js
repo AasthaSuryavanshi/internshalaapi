@@ -3,6 +3,9 @@ const studentModel = require('../Models/studentModel');
 const ErrorHandler = require("../utils/ErrorHandler");
 const { getToken } = require("../utils/getTokens");
 const { sendmail } = require("../utils/nodemailer");
+const  imagekit  = require("../utils/imagekit").initImageKit();
+const path = require('path');
+
 
 exports.homePage = CatchErrorHandling (async(req, res, next) => {
     res.json({message:"heeloo from get router"});
@@ -93,3 +96,36 @@ exports.studentresetPassword = CatchErrorHandling(async(req, res, next) => {
     await Student.save();
     res.status(200).json({message: "password reset successfully!"})
 });    
+
+
+exports.studentupdate = CatchErrorHandling(async(req, res, next) => {
+    await studentModel.findByIdAndUpdate(req.params.id, req.body).exec();
+    res.status(200).json({
+        success: true, 
+        message: "student details updated successfully!",
+    
+    })
+})
+
+
+exports.studentavatar = CatchErrorHandling(async(req, res, next) => {
+    const Student = await studentModel.findById(req.params.id).exec();
+    const file = req.files.avatar;
+    const modifiedFile = `uploads-${Date.now()}${path.extname(file.name)}`;
+
+    if(Student.avatar.fileId !== ""){
+        await imagekit.deleteFile(Student.avatar.fileId)
+    }
+
+    const {fileId,url} = await imagekit.upload({
+        file: file.data,
+        fileName: modifiedFile,
+        // transformation: [{ width: 200, height: 200, crop: 'fill' }]
+    })
+    Student.avatar = {fileId,url};
+    await Student.save();
+    res.status(200).json({
+        success: true,
+        message: "avatar updated successfully!",
+    })
+})
