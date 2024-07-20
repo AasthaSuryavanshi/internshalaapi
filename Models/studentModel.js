@@ -32,10 +32,15 @@ const studentModel = new mongoose.Schema({
             10,
             "Password must be less then 10 characters"
         ],
+        
         // match: [
     //     /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9]).{8,1024}$/,
     //     "Enter a Valid Password"
     // ]
+    },
+    resetPasswordToken: {
+        type: String,
+        default:"0"
     }
 
 }, { timestamps: true } );

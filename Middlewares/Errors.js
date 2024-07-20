@@ -13,6 +13,6 @@ exports.generatedErrors = (err,req,res,next) => {
     res.status(statusCode).json({
         message: err.message || "Somethin went wrong",
         errName: err.name ,
-        // stack: err.stack  
+        stack: err.stack  
     });
 };
